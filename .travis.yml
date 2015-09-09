@@ -20,14 +20,14 @@ before_install:
   - perl -V
   #- pwd
   #- ls -l
-  - mkdir ~/bin
-  - export PATH=$HOME/bin:$PATH
+  - mkdir ~/gdal
+  - export PATH=$HOME/gdal/bin:$PATH
   #- sh ./install_gdal.sh
 install:
   - which perl
   - wget http://download.osgeo.org/gdal/1.11.1/gdal-1.11.1.tar.gz
   - tar -xzvf gdal-1.11.1.tar.gz
-  - cd gdal-1.11.1 && ./configure --prefix=$HOME/bin && make && make install
+  - cd gdal-1.11.1 && ./configure --prefix=$HOME/gdal && make && make install
   - cd -
   #- which gdal-config
   - wget https://cpan.metacpan.org/authors/id/A/AJ/AJOLMA/Geo-GDAL-1.9921a.tar.gz
@@ -41,3 +41,6 @@ branches:
     - /^blocked/
   only:
     - master
+cache:
+  directories:
+  - $HOME/gdal
