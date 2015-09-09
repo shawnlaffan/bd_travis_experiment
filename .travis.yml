@@ -27,10 +27,10 @@ install:
   - which perl
   - wget http://download.osgeo.org/gdal/1.11.2/gdal-1.11.2.tar.gz
   - tar -xzvf gdal-1.11.2.tar.gz
-  - cd gdal-1.11.2 && ./configure --prefix=$HOME/gdal && make && make install
+  #- cd gdal-1.11.2 && ./configure --prefix=$HOME/gdal && make && make install
   - cd -
   #- which gdal-config
-  #- ls -R ~/gdal
+  - ls -R ~/gdal
   - wget https://cpan.metacpan.org/authors/id/A/AJ/AJOLMA/Geo-GDAL-1.9921a.tar.gz
   #- tar -xzvf Geo-GDAL-1.9921a.tar.gz
   #- cd Geo-GDAL-1.9921 && perl Makefile.PL --no-version-check --gdal-config=$HOME/gdal/bin/gdal-config && make && make test && make install
