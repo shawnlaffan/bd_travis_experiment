@@ -22,11 +22,11 @@ before_install:
   - ls -l
   #- sh ./install_gdal.sh
 install:
-  - cpan-install --deps       # installs prereqs, including recommends
   - wget http://download.osgeo.org/gdal/1.11.1/gdal-1.11.1.tar.gz
   - tar -xzvf gdal-1.11.1.tar.gz
   - mkdir ~/bin
   - cd gdal-1.11.1 && ./configure --prefix=$HOME/bin && make && make install
+  - cpan-install --deps       # installs prereqs, including recommends
 branches:
   except:
     - /^wip\//
