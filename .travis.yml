@@ -1,0 +1,18 @@
+language: perl
+sudo: false
+addons:
+  apt:
+    packages:
+    - libgdal-dev
+matrix:
+  include:
+    - perl: "5.20"
+      env: BD_NO_GUI_TEST=1
+install:
+  - cpan-install --deps       # installs prereqs, including recommends
+branches:
+  except:
+    - /^wip\//
+    - /^blocked/
+  only:
+    - master
