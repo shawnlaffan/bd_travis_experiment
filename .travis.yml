@@ -29,8 +29,12 @@ install:
   - tar -xzvf gdal-1.11.1.tar.gz
   - cd gdal-1.11.1 && ./configure --prefix=$HOME/bin --with-perl && make && make install
   - cd -
-  - pwd
-  - echo 'installed gdal'
+  - which gdal-config
+  - wget https://cpan.metacpan.org/authors/id/A/AJ/AJOLMA/Geo-GDAL-1.9921a.tar.gz
+  - tar -xzvf Geo-GDAL-1.9921a.tar.gz
+  - cd Geo-GDAL-1.9921a
+  - perl Makefile.PL --no-version-check --gdal-config=$HOME/bin/gdal-config && make && make test && make install
+  - cd -
   - cpan-install --deps       # installs prereqs, including recommends
 branches:
   except:
