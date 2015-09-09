@@ -23,7 +23,6 @@ before_install:
   #- sh ./install_gdal.sh
 install:
   - cpan-install --deps       # installs prereqs, including recommends
-  install:
   - wget http://download.osgeo.org/gdal/1.11.1/gdal-1.11.1.tar.gz
   - tar -xzvf gdal-1.11.1.tar.gz
   - mkdir ~/bin

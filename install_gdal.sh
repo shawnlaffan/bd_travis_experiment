@@ -15,6 +15,6 @@ ls
 #cd gdal-1.11.1
 mkdir ~/bin
 
-sh gdal-1.11.1/configure --with-python --with-perl --prefix=~/bin
+#sh gdal-1.11.1/configure --with-python --with-perl --prefix=~/bin
 make
 make install
