@@ -2,8 +2,8 @@ language: perl
 sudo: true
 addons:
   apt:
-    sources:
-      - ubuntugis/ubuntugis-unstable
+    #sources:
+    #  - ubuntugis/ubuntugis-unstable
     packages:
     - libgdal-dev
 matrix:
