@@ -8,6 +8,8 @@ our @EXPORT_OK = qw();
 
 our $VERSION = 1;
 
+use Geo::GDAL;
+
 1;
 
 
