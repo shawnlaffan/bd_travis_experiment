@@ -25,9 +25,9 @@ before_install:
   #- sh ./install_gdal.sh
 install:
   - which perl
-  - wget http://download.osgeo.org/gdal/1.11.1/gdal-1.11.1.tar.gz
-  - tar -xzvf gdal-1.11.1.tar.gz
-  - cd gdal-1.11.1 && ./configure --prefix=$HOME/gdal && make && make install
+  - wget http://download.osgeo.org/gdal/1.11.2/gdal-1.11.2.tar.gz
+  - tar -xzvf gdal-1.11.2.tar.gz
+  - cd gdal-1.11.2 && ./configure --prefix=$HOME/gdal && make && make install
   - cd -
   #- which gdal-config
   - ls -R ~/gdal
