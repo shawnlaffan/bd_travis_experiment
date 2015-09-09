@@ -18,6 +18,8 @@ before_install:
   - source ~/travis-perl-helpers/init
   - build-perl
   - perl -V
+  - pwd
+  - ls -l
   - sudo ./install_gdal.sh
 install:
   - cpan-install --deps       # installs prereqs, including recommends
