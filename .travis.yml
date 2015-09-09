@@ -10,8 +10,8 @@ matrix:
   include:
     - perl: "5.20"
       env: BD_NO_GUI_TEST=1
-    - perl: "5.22"
-      env: BD_NO_GUI_TEST=1
+    #- perl: "5.22"
+      #env: BD_NO_GUI_TEST=1
 before_install:
   - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
   - export SPLIT_BUILD=0
@@ -20,7 +20,7 @@ before_install:
   - perl -V
   - pwd
   - ls -l
-  - ./install_gdal.sh
+  - sh ./install_gdal.sh
 install:
   - cpan-install --deps       # installs prereqs, including recommends
 branches:
