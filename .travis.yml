@@ -14,18 +14,21 @@ matrix:
       #env: BD_NO_GUI_TEST=1
 before_install:
   - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
-  - export SPLIT_BUILD=0
+  #- export SPLIT_BUILD=0
   - source ~/travis-perl-helpers/init
   - build-perl
   - perl -V
-  - pwd
-  - ls -l
+  #- pwd
+  #- ls -l
+  - mkdir ~/bin
+  - export PATH=$HOME/bin:$PATH
   #- sh ./install_gdal.sh
 install:
   - wget http://download.osgeo.org/gdal/1.11.1/gdal-1.11.1.tar.gz
   - tar -xzvf gdal-1.11.1.tar.gz
-  - mkdir ~/bin
   - cd gdal-1.11.1 && ./configure --prefix=$HOME/bin --with-perl && make && make install
+  - pwd
+  - echo 'installed gdal'
   #- cpan-install --deps       # installs prereqs, including recommends
 branches:
   except:
