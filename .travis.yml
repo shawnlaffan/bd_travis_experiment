@@ -1,11 +1,11 @@
 language: perl
-sudo: true
+sudo: false
 addons:
   apt:
     #sources:
     #  - ubuntugis/ubuntugis-unstable
     packages:
-    - libgdal-dev
+    - libgdal-dev build-essential python-all-dev
 matrix:
   include:
     - perl: "5.20"
@@ -20,7 +20,7 @@ before_install:
   - perl -V
   - pwd
   - ls -l
-  - sudo ./install_gdal.sh
+  - ./install_gdal.sh
 install:
   - cpan-install --deps       # installs prereqs, including recommends
 branches:
