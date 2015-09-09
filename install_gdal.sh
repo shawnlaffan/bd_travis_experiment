@@ -9,6 +9,7 @@
 
 wget http://download.osgeo.org/gdal/1.11.1/gdal-1.11.1.tar.gz
 #gzip -d gdal-1.11.1.tar.gz
+ls
 tar xvz gdal-1.11.1.tar.gz
 ls
 #cd gdal-1.11.1

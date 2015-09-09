@@ -20,9 +20,14 @@ before_install:
   - perl -V
   - pwd
   - ls -l
-  - sh ./install_gdal.sh
+  #- sh ./install_gdal.sh
 install:
   - cpan-install --deps       # installs prereqs, including recommends
+  install:
+  - wget http://download.osgeo.org/gdal/1.11.1/gdal-1.11.1.tar.gz
+  - tar -xzvf gdal-1.11.1.tar.gz
+  - mkdir ~/bin
+  - cd gdal-1.11.1 && ./configure --prefix=~/bin && make && make install
 branches:
   except:
     - /^wip\//
