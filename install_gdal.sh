@@ -9,8 +9,10 @@
 
 wget http://download.osgeo.org/gdal/1.11.1/gdal-1.11.1.tar.gz
 tar xvz gdal-1.11.1.tar.gz
-cd gdal-1.11.1
+ls
+#cd gdal-1.11.1
+mkdir ~/bin
 
-./configure --with-python --with-perl --prefix=~/bin
+gdal-1.11.1/configure --with-python --with-perl --prefix=~/bin
 make
 make install
