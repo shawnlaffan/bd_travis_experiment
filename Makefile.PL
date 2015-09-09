@@ -16,11 +16,10 @@ WriteMakefile(
     },
     BUILD_REQUIRES => {
         'Test::More' => 0,
-        'Statistics::Descriptive' => "3.06",
-        'rlib' => "0",
     },
     PREREQ_PM => {
         'Task::Biodiverse::NoGUI' => 0,
+        'Geo::GDAL' => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     #clean => { FILES => 'Statistics-Descriptive-PDL-*' },
