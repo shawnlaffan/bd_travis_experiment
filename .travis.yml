@@ -43,6 +43,6 @@ branches:
     - /^blocked/
   only:
     - master
-cache:
-  directories:
-  - $HOME/gdal
+#cache:  #  need to work out how to use this across the matrix
+#  directories:
+#  - $HOME/gdal
