@@ -19,7 +19,7 @@ WriteMakefile(
     },
     PREREQ_PM => {
         'Task::Biodiverse::NoGUI' => 0,
-        'Geo::GDAL' => 0,
+        #'Geo::GDAL' => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     #clean => { FILES => 'Statistics-Descriptive-PDL-*' },
