@@ -21,16 +21,16 @@ before_install:
   - perl -V
   #- pwd
   #- ls -l
-  #- mkdir ~/gdal
+  - [-d ~/gdal] || mkdir ~/gdal
   - export PATH=$HOME/gdal/bin:$PATH
   #- sh ./install_gdal.sh
 install:
   - which perl
-  #- wget http://download.osgeo.org/gdal/1.11.2/gdal-1.11.2.tar.gz
-  #- tar -xzvf gdal-1.11.2.tar.gz
-  #- cd gdal-1.11.2 && ./configure --prefix=$HOME/gdal && make && make install
+  - wget http://download.osgeo.org/gdal/1.11.2/gdal-1.11.2.tar.gz
+  - tar -xzvf gdal-1.11.2.tar.gz
+  - cd gdal-1.11.2 && ./configure --prefix=$HOME/gdal && make && make install
   - cd -
-  #- which gdal-config
+  - which gdal-config
   - ls -R ~/gdal
   - wget https://cpan.metacpan.org/authors/id/A/AJ/AJOLMA/Geo-GDAL-1.9921a.tar.gz
   - tar -xzvf Geo-GDAL-1.9921a.tar.gz
