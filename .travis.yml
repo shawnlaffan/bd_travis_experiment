@@ -25,7 +25,7 @@ before_install:
   - export PATH=$HOME/gdal/bin:$PATH
   #- sh ./install_gdal.sh
   - which cpanm
-  - cpanm --verbose --no-interactive --skip-satisfied Task::Biodiverse::NoGUI
+  - cpanm --verbose --no-interactive --notest --skip-satisfied Task::Biodiverse::NoGUI
 install:
   - which perl
   #- wget http://download.osgeo.org/gdal/1.11.2/gdal-1.11.2.tar.gz
