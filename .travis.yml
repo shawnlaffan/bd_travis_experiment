@@ -39,8 +39,8 @@ install:
   - cd Geo-GDAL-1.9921 && perl Makefile.PL --no-version-check --gdal-config=$gdalconfig && make && make test && make install && make clean
   - echo 'GDAL installed'
   - pwd
-  - cd ..
-  - rm -r Geo-GDAL-1.9921  #  avoid makefile confusion
+  - cd .. 
+  - rm -r Geo-GDAL-1.9921  #  avoid makefile confusion - might be handled by the make clean though
   - cd $startdir
   - perl -MGeo::GDAL -E'say "got Geo::GDAL"'
   - pwd
