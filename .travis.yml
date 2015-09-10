@@ -9,10 +9,10 @@ addons:
     - libgdal-dev build-essential python-all-dev
 matrix:
   include:
-    - perl: "5.20"
+    - perl: "5.20.1"
       env: BD_NO_GUI_TEST=1
-    - perl: "5.22"
-      env: BD_NO_GUI_TEST=1
+    #- perl: "5.22"
+    #  env: BD_NO_GUI_TEST=1
 before_install:
   - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
   #- export SPLIT_BUILD=0
