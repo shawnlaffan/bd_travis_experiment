@@ -21,7 +21,7 @@ before_install:
   - perl -V
   #- pwd
   #- ls -l
-  - if [!-d $HOME/gdal] then mkdir ~/gdal fi
+  - if [[ -d $HOME/gdal ]] || mkdir ~/gdal
   - export PATH=$HOME/gdal/bin:$PATH
   #- sh ./install_gdal.sh
 install:
