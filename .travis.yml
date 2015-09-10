@@ -38,7 +38,7 @@ install:
   - tar -xzvf Geo-GDAL-1.9921a.tar.gz
   - cd Geo-GDAL-1.9921 && perl Makefile.PL --no-version-check --gdal-config=$gdalconfig && make && make test && make install
   - echo 'GDAL installed'
-  - perl -MGeo::GDAL -E'say got Geo::GDAL'
+  - perl -MGeo::GDAL -E'say "got Geo::GDAL"'
   - cd -
   #- cpan-install --deps       # installs prereqs, including recommends
 branches:
