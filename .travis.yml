@@ -24,6 +24,8 @@ before_install:
   - mkdir -p $HOME/gdal
   - export PATH=$HOME/gdal/bin:$PATH
   #- sh ./install_gdal.sh
+  - which cpanm
+  - cpanm --verbose --no-interactive --skip-satisfied Task::Biodiverse::NoGUI
 install:
   - which perl
   #- wget http://download.osgeo.org/gdal/1.11.2/gdal-1.11.2.tar.gz
@@ -36,8 +38,6 @@ install:
   #- tar -xzvf Geo-GDAL-1.9921a.tar.gz
   #- cd Geo-GDAL-1.9921 && perl Makefile.PL --no-version-check --gdal-config=$HOME/gdal/bin/gdal-config && make && make test && make install
   #- cd -
-  - which cpanm
-  - cpanm Task::Biodiverse::NoGUI
   #- cpan-install --deps       # installs prereqs, including recommends
 branches:
   except:
