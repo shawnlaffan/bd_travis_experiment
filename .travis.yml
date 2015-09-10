@@ -6,7 +6,7 @@ addons:
     #  - ubuntugis/ubuntugis-unstable
     packages:
       #  not sure these are all needed now we build and cache gdal
-      - libgdal-dev build-essential python-all-dev
+    - libgdal-dev build-essential python-all-dev
 matrix:
   include:
     - perl: "5.20.1"
@@ -21,7 +21,7 @@ before_install:
   - perl -V
   #- pwd
   #- ls -l
-  - [[ -d $HOME/gdal ]] || mkdir ~/gdal
+  - mkdir -p $HOME/gdal
   - export PATH=$HOME/gdal/bin:$PATH
   #- sh ./install_gdal.sh
 install:
