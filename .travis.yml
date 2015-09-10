@@ -28,19 +28,20 @@ install:
   - which perl
   - gdalconfig=`find $HOME -name gdal-config -print`
   - echo $gdalconfig
-  - wget http://download.osgeo.org/gdal/1.11.2/gdal-1.11.2.tar.gz
-  - tar -xzvf gdal-1.11.2.tar.gz
-  - cd gdal-1.11.2 && ./configure --prefix=$HOME/gdal && make && make install
-  - cd -
-  - gdalconfig=`which gdal-config`
+  - [[ -n $gdalconfig ]] && wget http://download.osgeo.org/gdal/1.11.2/gdal-1.11.2.tar.gz
+  - [[ -n $gdalconfig ]] && tar -xzvf gdal-1.11.2.tar.gz
+  - [[ -n $gdalconfig ]] && cd gdal-1.11.2 && ./configure --prefix=$HOME/gdal && make && make install
+  - [[ -n $gdalconfig ]] && cd -
+  - [[ -n $gdalconfig ]] && gdalconfig=`which gdal-config`
   - ls -R ~/gdal
   - wget https://cpan.metacpan.org/authors/id/A/AJ/AJOLMA/Geo-GDAL-1.9921a.tar.gz
   - tar -xzvf Geo-GDAL-1.9921a.tar.gz
   - cd Geo-GDAL-1.9921 && perl Makefile.PL --no-version-check --gdal-config=$gdalconfig && make && make test && make install && make clean
-  - pwd
-  - cd $startdir
-  - rm -r Geo-GDAL-1.9921  #  avoid makefile confusion
   - echo 'GDAL installed'
+  - pwd
+  - cd ..
+  - rm -r Geo-GDAL-1.9921  #  avoid makefile confusion
+  - cd $startdir
   - perl -MGeo::GDAL -E'say "got Geo::GDAL"'
   - pwd
   #- cpan-install --deps       # installs prereqs, including recommends
@@ -50,6 +51,6 @@ branches:
     - /^blocked/
   only:
     - master
-#cache:  #  need to work out how to use this across the matrix
-#  directories:
-#  - $HOME/gdal
+cache:  #  need to work out how to use this across the matrix
+  directories:
+  - $HOME/gdal
