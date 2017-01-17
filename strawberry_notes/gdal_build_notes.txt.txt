@@ -1,0 +1,29 @@
+
+
+export ST=/c/berrybrew/5.24.0_64_PDL
+export GDAL_ROOT=/c/gdal_builds/gdal-2.1.2
+export PATH=${ST}/c/bin:${ST}/perl/site/bin:${ST}/perl/bin:${PATH}
+#  for -L
+export LIBRARY_PATH=${ST}/perl/lib/CORE:${ST}/c/lib:/c/gdal-2.1.1_mk2/gdal-2.1.1
+#  for -I
+export CPATH=/c/berrybrew/5.24.0_64_PDL/c/include
+
+
+./configure
+
+
+#  now edit the files as per https://trac.osgeo.org/gdal/wiki/BuildingWithMinGW
+#  1.
+#  change all $(GDAL_ROOT) in GNUmakefile to '.'
+#  otherwise some commands get too long
+#  Could just set GDAL_ROOT=.?
+#  2.
+#  skip expat steps for now - should point to strawberry perl's version
+#  3.
+#  skip the gtk steps as I don't have it in the path under msys2
+#  4.
+#  skip the misc section for now as we seem to get the same answers as in that wiki page
+#  except SIZEOF_VOIDP, but poss that's due to x64?  Leaving at 8 for now.  
+
+make
+
