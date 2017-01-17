@@ -1,14 +1,15 @@
 msys2 third atempt, using msys2 shell
 
-export ST=/c/berrybrew/5.24.0_64_PDL
-export GDAL_ROOT=/c/gdal_builds/gdal-2.1.2
-export PATH=${ST}/c/bin:${ST}/perl/site/bin:${ST}/perl/bin:${PATH}
-#  for -L
-export LIBRARY_PATH=${ST}/perl/lib/CORE:${ST}/c/lib:/c/gdal-2.1.1_mk2/gdal-2.1.1
-#  for -I
-export CPATH=/c/berrybrew/5.24.0_64_PDL/c/include
+#  download and extract latest gdal from metacpan
 
-perl Makefile.PL --gdal-config=${GDAL_ROOT}/apps/gdal-config --no-version-check
+
+export ST_PERL=/c/berrybrew/5.24.0_64_PDL
+export GDAL_ROOT=/c/gdal_builds/gdal-2.1.2
+export PATH=${ST_PERL}/c/bin:${ST_PERL}/perl/site/bin:${ST_PERL}/perl/bin:${PATH}
+#  for -L
+export LIBRARY_PATH=${ST_PERL}/perl/lib/CORE:${ST_PERL}/c/lib:${GDAL_ROOT}
+#  for -I  (might need to edit gdal-config of Makefile.pl?)
+export CPATH=${ST_PERL}/c/include:${ST_PERL}/perl/lib/CORE
 
 # edit Makefile.PL to generate a make-style makefile
 # WriteMakefile (
@@ -16,18 +17,82 @@ perl Makefile.PL --gdal-config=${GDAL_ROOT}/apps/gdal-config --no-version-check
 # ...
 # );
 
-##  from Knittel notes
+perl Makefile.PL --gdal-config=${GDAL_ROOT}/apps/gdal-config --no-version-check
+
+
+#  we get this:
+# $ perl Makefile.PL --gdal-config=${GDAL_ROOT}/apps/gdal-config --no-version-check
+  # -lodbc32 -lodbccp32 -L/../../lib -lnetcdf -lhdf5 -lgif -ljpeg -ltiff -lpng -lcfitsio -LC:/BERRYB~1/524~1.0_6/c/lib -lpq -lz -lpthread  -lws2_32   -L/mingw64/lib -lcurl -lnghttp2 -lidn -lrtmp -lssh2 -lssl -lcrypto -lssl -lcrypto -lgdi32 -lwldap32 -lz -lws2_32             -L/../../lib -lxml2 -lz -lws2_32
+# -I/c/gdal_builds/gdal-2.1.2/port -I/c/gdal_builds/gdal-2.1.2/gcore -I/c/gdal_builds/gdal-2.1.2/alg -I/c/gdal_builds/gdal-2.1.2/ogr -I/c/gdal_builds/gdal-2.1.2/ogr/ogrsf_frmts -I/c/gdal_builds/gdal-2.1.2/frmts/vrt -I/c/gdal_builds/gdal-2.1.2/apps
+# Warning (mostly harmless): No library found for -lcurl
+# Warning (mostly harmless): No library found for -lnghttp2
+# Warning (mostly harmless): No library found for -lidn
+# Warning (mostly harmless): No library found for -lrtmp
+# Warning (mostly harmless): No library found for -lssl
+# Warning (mostly harmless): No library found for -lcrypto
+# Warning (mostly harmless): No library found for -lssl
+# Warning (mostly harmless): No library found for -lcrypto
+# Generating a make-style Makefile_Geo__GDAL
+# Writing Makefile_Geo__GDAL for Geo::GDAL
+# Writing MYMETA.yml and MYMETA.json
+# WARNING: Setting ABSTRACT via file 'lib/Geo/GDAL.pm' failed
+ # at C:/berrybrew/5.24.0_64_PDL/perl/lib/ExtUtils/MakeMaker.pm line 755.
+# Warning (mostly harmless): No library found for -lcurl
+# Warning (mostly harmless): No library found for -lnghttp2
+# Warning (mostly harmless): No library found for -lidn
+# Warning (mostly harmless): No library found for -lrtmp
+# Warning (mostly harmless): No library found for -lssl
+# Warning (mostly harmless): No library found for -lcrypto
+# Warning (mostly harmless): No library found for -lssl
+# Warning (mostly harmless): No library found for -lcrypto
+# Generating a make-style Makefile_Geo__GDAL__Const
+# Writing Makefile_Geo__GDAL__Const for Geo::GDAL::Const
+# Writing MYMETA.yml and MYMETA.json
+# WARNING: Setting ABSTRACT via file 'lib/Geo/GDAL.pm' failed
+ # at C:/berrybrew/5.24.0_64_PDL/perl/lib/ExtUtils/MakeMaker.pm line 755.
+# Warning (mostly harmless): No library found for -lcurl
+# Warning (mostly harmless): No library found for -lnghttp2
+# Warning (mostly harmless): No library found for -lidn
+# Warning (mostly harmless): No library found for -lrtmp
+# Warning (mostly harmless): No library found for -lssl
+# Warning (mostly harmless): No library found for -lcrypto
+# Warning (mostly harmless): No library found for -lssl
+# Warning (mostly harmless): No library found for -lcrypto
+# Generating a make-style Makefile_Geo__OGR
+# Writing Makefile_Geo__OGR for Geo::OGR
+# Writing MYMETA.yml and MYMETA.json
+# WARNING: Setting ABSTRACT via file 'lib/Geo/GDAL.pm' failed
+ # at C:/berrybrew/5.24.0_64_PDL/perl/lib/ExtUtils/MakeMaker.pm line 755.
+# Warning (mostly harmless): No library found for -lcurl
+# Warning (mostly harmless): No library found for -lnghttp2
+# Warning (mostly harmless): No library found for -lidn
+# Warning (mostly harmless): No library found for -lrtmp
+# Warning (mostly harmless): No library found for -lssl
+# Warning (mostly harmless): No library found for -lcrypto
+# Warning (mostly harmless): No library found for -lssl
+# Warning (mostly harmless): No library found for -lcrypto
+# Generating a make-style Makefile_Geo__OSR
+# Writing Makefile_Geo__OSR for Geo::OSR
+# Writing MYMETA.yml and MYMETA.json
+
+
+
+
+##  adapted from Knittel notes
 # Make the following changes:
 
 sed -i -e 's/RANLIB = rem/RANLIB = ranlib/' Makefile_*
 sed -i -e 's/NOOP = rem/NOOP =/' Makefile_*
 sed -i -e 's/DIRFILESEP = \\/DIRFILESEP = \//' Makefile_*
 #  iostream issues - just comment it out
-sed -i -e 's/#include <iostream>/\\\\#include <iostream>/' *wrap.cpp
+sed -i -e 's/#include <iostream>/\/\/#include <iostream>/' *wrap.cpp
 #  next line should not be needed
 sed -i -e 's/\/mingw\/bin\/x86_64-w64-mingw32-g++/g++/' Makefile_*
 # The paths were written in format: /c/strawberry\perl\bin\perl.exe etc, which turns into C:strawberryperlbinperl.exe.  The following should transform '\' into '/', excluding cases such as \" and \(end of line):
 sed -i -e 's/\\\([^\"\\]\)/\/\1/g' Makefile_*
+#  and change "C:/berrybrew
+sed -i -e 's/C\:\/berrybrew/\/c\/berrybrew/g' Makefile_*
+
 
 #  now try making it
 make
@@ -83,7 +148,7 @@ export ST=c:/berrybrew/5.24.0_64_PDL
 export ST=C:/berrybrew/5.22.2_64
 export ST=/c/berrybrew/5.22.2_64
 export ST=/c/berrybrew/5.24.0_64_PDL
-export PATH=${ST}/c/bin:${ST}/perl/site/bin:${ST}/perl/bin:${PATH}
+export PATH=${ST_PERL}/c/bin:${ST_PERL}/perl/site/bin:${ST_PERL}/perl/bin:${PATH}
 #export LD_LIBRARY_PATH=/c/berrybrew/5.24.0_64_PDL/c/lib
 export LIBRARY_PATH=/c/berrybrew/5.24.0_64_PDL/c/lib
 export CPATH=/c/berrybrew/5.24.0_64_PDL/c/include
