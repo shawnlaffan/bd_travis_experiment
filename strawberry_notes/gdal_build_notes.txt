@@ -1,0 +1,155 @@
+msys2 third atempt, using msys2 shell
+
+export ST=/c/berrybrew/5.24.0_64_PDL
+export GDAL_ROOT=/c/gdal_builds/gdal-2.1.2
+export PATH=${ST}/c/bin:${ST}/perl/site/bin:${ST}/perl/bin:${PATH}
+#  for -L
+export LIBRARY_PATH=${ST}/perl/lib/CORE:${ST}/c/lib:/c/gdal-2.1.1_mk2/gdal-2.1.1
+#  for -I
+export CPATH=/c/berrybrew/5.24.0_64_PDL/c/include
+
+perl Makefile.PL --gdal-config=${GDAL_ROOT}/apps/gdal-config --no-version-check
+
+# edit Makefile.PL to generate a make-style makefile
+# WriteMakefile (
+#     MAKE => 'make',
+# ...
+# );
+
+##  from Knittel notes
+# Make the following changes:
+
+sed -i -e 's/RANLIB = rem/RANLIB = ranlib/' Makefile_*
+sed -i -e 's/NOOP = rem/NOOP =/' Makefile_*
+sed -i -e 's/DIRFILESEP = \\/DIRFILESEP = \//' Makefile_*
+#  iostream issues - just comment it out
+sed -i -e 's/#include <iostream>/\\\\#include <iostream>/' *wrap.cpp
+#  next line should not be needed
+sed -i -e 's/\/mingw\/bin\/x86_64-w64-mingw32-g++/g++/' Makefile_*
+# The paths were written in format: /c/strawberry\perl\bin\perl.exe etc, which turns into C:strawberryperlbinperl.exe.  The following should transform '\' into '/', excluding cases such as \" and \(end of line):
+sed -i -e 's/\\\([^\"\\]\)/\/\1/g' Makefile_*
+
+#  now try making it
+make
+
+# #  We get an error like this:
+# In file included from gdal_wrap.cpp:745:0:
+# gdal_wrap.cpp: In function 'void VSIStdoutUnsetRedirection()':
+# C:/berrybrew/5.24.0_64_PDL/perl/lib/CORE/XSUB.h:592:21: error: 'PerlSIO_fwrite' was not declared in this scope
+# #    define fwrite  PerlSIO_fwrite
+#                     ^
+# gdal_wrap.cpp:2161:30: note: in expansion of macro 'fwrite'
+#      VSIStdoutSetRedirection( fwrite, stdout );
+#                               ^
+
+
+# For now just edit that sub to do nothing - total kludge.
+# Presumably we are getting the wrong fwrite?
+
+
+# Then the tests all bomb out.  Make sure gdal.dll is in the path (copy it to the blib/bin folder)
+
+# Then also manually copy the arch/auto contents into lib/auto/ (not sure that is a good idea either)
+
+# Tests fail - badly in some cases.  Some will be due to the fwrite kludge, presumably.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+msys2 second attempt
+
+inside the msys shell
+
+export ST=c:/berrybrew/5.24.0_64_PDL
+export ST=C:/berrybrew/5.22.2_64
+export ST=/c/berrybrew/5.22.2_64
+export ST=/c/berrybrew/5.24.0_64_PDL
+export PATH=${ST}/c/bin:${ST}/perl/site/bin:${ST}/perl/bin:${PATH}
+#export LD_LIBRARY_PATH=/c/berrybrew/5.24.0_64_PDL/c/lib
+export LIBRARY_PATH=/c/berrybrew/5.24.0_64_PDL/c/lib
+export CPATH=/c/berrybrew/5.24.0_64_PDL/c/include
+
+https://trac.osgeo.org/gdal/wiki/BuildingWithMinGW
+
+poss have issue with path length - use a short one e.g. c:/gdal211
+
+from https://trac.osgeo.org/gdal/wiki/FAQInstallationAndBuilding#CanIbuildGDALwithCygwinorMinGW
+and http://www.gaia-gis.it/gaia-sins/mingw64_how_to.html#env
+export "CPPLAGS=-I/usr/local/include"
+export "LDFLAGS=-L/usr/local/lib"
+#./configure --host=x86_64-w64-mingw32 \
+#	--without-libtool --without-python --with-liblzma=yes
+./configure \
+	--without-libtool --without-python --with-liblzma=yes
+	
+	
+need to update port/cpl_config.h
+#define SIZEOF_UNSIGNED_LONG 4
+#define SIZEOF_VOIDP 8
+
+edit GNUmakefile so '$(GDAL_ROOT)' is '.'
+This is needed as some argument lists get too long
+
+Have not tried UTF8 filenames option from https://trac.osgeo.org/gdal/wiki/BuildingWithMinGW
+
+use the strip utility to reduce the binary size.  https://trac.osgeo.org/geoinformatica/wiki/BuildWithMingw
+
+
+#  wasted effort when trying mingw for everything
+perl makefiles
+DIRSEPSTR = /
+DIRFILESEP = /
+
+
+
+msys2 attempt
+
+inside the msys shell
+
+https://trac.osgeo.org/gdal/wiki/BuildingWithMinGW
+
+need to update cpl_config.h
+#define SIZEOF_UNSIGNED_LONG 4
+maybe should be 8?
+
+
+back in CMD land:
+edit the gdal-config file to use c:/ instead of /c/
+edit the perl Makefile.PL so we use `sh` when it calls $config.
+
+comment out iostream as per Anthony's notes 
+
+
+
+
+osgeo attempt
+edit gdal-config in the os4 bin folder
+rename gdal201.dll to libgdal.dll  #  needed?
+
+rename gdal_i.lib -> gdal.lib  (makes it find -lgdal)
+
+in Geo::GDAL folder:
+
+\strawberry\set_strawberry_path.bat
+set PATH=c:\shawn\bin\bash;c:\OSGeo4W64\bin;%PATH%
+
+perl Makefile.PL --gdal-config=C:\OSGeo4W64\bin\gdal-config

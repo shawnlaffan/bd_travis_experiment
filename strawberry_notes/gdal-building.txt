@@ -1,0 +1,154 @@
+
+(Hack) instructions for building GDAL with perl bindings on windows / strawberry perl
+
+Shown using GDAL-1.10.1 and Strawberry 5.16.3.1-64 bit, using a MinGW environment. Note there can be mix-ups between the different tool chains. I have strawberry in the path before mingw, so running g++ etc uses the version provided with strawberry (/c/strawberry/c/bin/g++.exe), but some build tools may be using mingw versions.
+
+Chapter 1: attempting normal install.
+
+Go to the gdal folder and run ./configure --with-perl (and any other options etc)
+
+So far so good.  Running make (from MinGW, not strawberry), the gdal libraries build ok, but we get build errors with the perl extensions.  Note gmake (with strawberry) produces different errors.
+
+gcc -c  -I/c/gdal-1.10.1/port -I/c/gdal-1.10.1/gcore -I/c/gdal-1.10.1/alg -I/c/g
+dal-1.10.1/ogr -I/c/gdal-1.10.1/ogr/ogrsf_frmts -I/c/gdal-1.10.1/frmts/vrt -s -O
+2 -DCONSERVATIVE -DPERL_TEXTMODE_SCRIPTS -DPERL_IMPLICIT_CONTEXT -DPERL_IMPLICIT
+_SYS -fno-strict-aliasing -mms-bitfields -s -O2   -DVERSION=\"1.9911\" -DXS_VERS
+ION=\"1.9911\"  "-I/c/strawberry/perl/lib/CORE"   gdal_wrap.cpp
+In file included from /c/strawberry\c\bin\../lib/gcc/x86_64-w64-mingw32/4.6.3/in
+clude/c++/ios:44:0,
+                 from /c/strawberry\c\bin\../lib/gcc/x86_64-w64-mingw32/4.6.3/in
+clude/c++/ostream:40,
+                 from /c/strawberry\c\bin\../lib/gcc/x86_64-w64-mingw32/4.6.3/in
+clude/c++/iostream:40,
+                 from gdal_wrap.cpp:1560:
+/c/strawberry\c\bin\../lib/gcc/x86_64-w64-mingw32/4.6.3/include/c++/streambuf:57
+1:7: error: expected ')' before '*' token
+
+..and so on.
+
+Modify swig/perl/gdal_wrap.cpp (check that it makes sense, i've ended up with the include on a different line):
+
+1560,1562d1559
+< #include <iostream>
+< using namespace std;
+<
+1576a1574,1576
+>
+> //#include <iostream>
+> using namespace std;
+
+Next were problems with the auto-generated files in swig/perl.  I've taken the approach of modifying them by hand instead of trying to reconfigure makemaker.  We can go to the swig/perl dir for most of the next build attempts.  Next error:
+
+make[3]: Entering directory `/c/gdaldir/swig/perl'
+dlltool --def GDAL.def --output-exp dll.exp
+/mingw/bin/x86_64-w64-mingw32-g++ -o blib/arch/auto/Geo/GDAL/GDAL.dll -Wl,--base
+-file -Wl,dll.base -mdll -s -L"/c/strawberry/perl/lib/CORE" -L"/c/strawberry/c/l
+ib" gdal_wrap.o   /c/strawberry/perl/lib/CORE/libperl516.a /c/strawberry/c/x86_6
+4-w64-mingw32/lib/libws2_32.a /c/strawberry/c/lib/libiconv.a /c/strawberry/c/x86
+_64-w64-mingw32/lib/libmoldname.a /c/strawberry/c/x86_64-w64-mingw32/lib/libkern
+el32.a /c/strawberry/c/x86_64-w64-mingw32/lib/libuser32.a /c/strawberry/c/x86_64
+-w64-mingw32/lib/libgdi32.a /c/strawberry/c/x86_64-w64-mingw32/lib/libwinspool.a
+ /c/strawberry/c/x86_64-w64-mingw32/lib/libcomdlg32.a /c/strawberry/c/x86_64-w64
+-mingw32/lib/libadvapi32.a /c/strawberry/c/x86_64-w64-mingw32/lib/libshell32.a C
+:/strawberry/c/x86_64-w64-mingw32/lib/libole32.a /c/strawberry/c/x86_64-w64-ming
+w32/lib/liboleaut32.a /c/strawberry/c/x86_64-w64-mingw32/lib/libnetapi32.a /c/st
+rawberry/c/x86_64-w64-mingw32/lib/libuuid.a /c/strawberry/c/x86_64-w64-mingw32/l
+ib/libws2_32.a /c/strawberry/c/x86_64-w64-mingw32/lib/libmpr.a /c/strawberry/c/x
+86_64-w64-mingw32/lib/libwinmm.a /c/strawberry/c/x86_64-w64-mingw32/lib/libversi
+on.a /c/strawberry/c/x86_64-w64-mingw32/lib/libodbc32.a /c/strawberry/c/x86_64-w
+64-mingw32/lib/libodbccp32.a /c/strawberry/c/x86_64-w64-mingw32/lib/libcomctl32.
+a dll.exp
+/mingw/bin/x86_64-w64-mingw32-g++: /mingw/bin/x86_64-w64-mingw32-g++: cannot exe
+cute binary file
+make[3]: *** [blib/arch/auto/Geo/GDAL/GDAL.dll] Error 126
+
+There are a few issues that came up, regarding discovering appopriate tools (which will vary).  I made the following changes:
+
+sed -i -e 's/RANLIB = rem/RANLIB = ranlib/' Makefile_*
+sed -i -e 's/NOOP = rem/NOOP =/' Makefile_*
+
+41c41
+< LD = /mingw/bin/x86_64-w64-mingw32-g++
+---
+> LD = g++
+
+The paths were written in format: /c/strawberry\perl\bin\perl.exe etc, which turns into C:strawberryperlbinperl.exe.  The following should transform '\' into '/', excluding cases such as \" and \(end of line):
+
+sed -i -e 's/\\\([^\"\\]\)/\/\1/g' Makefile_Geo__*
+
+The double braces {{@ARGV}} seems to be a problem:
+
+sed -i -e 's/pm_to_blib[(][{][{]@ARGV[}][}]/pm_to_blib\(\{@ARGV\}/' Makefile_* 
+
+Next I ended up with the build error on gdal_wrap.cpp again, fixed as follows (check the line):
+
+1575c1575
+< #include <iostream>
+---
+> //#include <iostream>
+
+After that is a very long list of undefined references when linking, eg:
+
+gdal_wrap.o:gdal_wrap.cpp:(.text+0x30a51): undefined reference to `GDALGetDriver
+ByName'
+gdal_wrap.o:gdal_wrap.cpp:(.text+0x30a61): undefined reference to `GDALGetDriver
+'
+gdal_wrap.o:gdal_wrap.cpp:(.text+0x30b51): undefined reference to `GDALIdentifyD
+river'
+/c/strawberry/c/bin/../lib/gcc/x86_64-w64-mingw32/4.6.3/../../../../x86_64-w64-m
+ingw32/bin/ld.exe: gdal_wrap.o: bad reloc address 0x0 in section `.data'
+collect2: ld returned 1 exit status
+make[1]: *** [blib/arch/auto/Geo/GDAL/GDAL.dll] Error 1
+make[1]: Leaving directory `/c/tmp/gdal-1.10.1/swig/perl'
+make: *** [build] Error 2
+
+This is fixed by adding the following to the end of the LDLOADLIBS var, in each of the Makefile_Geo_* files:
+-lzlib -ltiff -lws2_32 -ljpeg -lpq -lpng -lgif -lxml2 -liconv -lgdal
+
+And the following to the end of the LDDLFLAGS and LDFLAGS variables so it can find libgdal.a etc:
+-L../../.libs
+
+(this command should do the trick:)
+
+sed -i -e 's/\(LDLOADLIBS.*\)/\1 -lzlib -ltiff -lws2_32 -ljpeg -lpq -lpng -lgif -lxml2 -liconv -lgdal/' -e 's/\(LDDLFLAGS.*\)/\1 -L..\/..\/.libs/' -e 's/\(LDFLAGS.*\)/\1 -L..\/..\/.libs/' Makefile_Geo__*
+
+
+Next we have an include problem with ogr_wrap.cpp:
+
+make[1]: Entering directory `/c/tmp/gdal-1.10.1/swig/perl'
+gcc -c  -I/c/tmp/gdal-1.10.1/port -I/c/tmp/gdal-1.10.1/gcore -I/c/tmp/gdal-1.10.
+1/alg -I/c/tmp/gdal-1.10.1/ogr -I/c/tmp/gdal-1.10.1/ogr/ogrsf_frmts -I/c/tmp/gda
+l-1.10.1/frmts/vrt -s -O2 -DWIN32 -DWIN64 -DCONSERVATIVE -DPERL_TEXTMODE_SCRIPTS
+ -DPERL_IMPLICIT_CONTEXT -DPERL_IMPLICIT_SYS -fno-strict-aliasing -mms-bitfields
+ -s -O2   -DVERSION=\"1.9911\" -DXS_VERSION=\"1.9911\"  "-I/c/strawberry/perl/li
+b/CORE"   ogr_wrap.cpp
+In file included from /c/strawberry\c\bin\../lib/gcc/x86_64-w64-mingw32/4.6.3/in
+clude/c++/ios:44:0,
+                 from /c/strawberry\c\bin\../lib/gcc/x86_64-w64-mingw32/4.6.3/in
+clude/c++/ostream:40,
+                 from /c/strawberry\c\bin\../lib/gcc/x86_64-w64-mingw32/4.6.3/in
+clude/c++/iostream:40,
+                 from ogr_wrap.cpp:1573:
+/c/strawberry\c\bin\../lib/gcc/x86_64-w64-mingw32/4.6.3/include/c++/streambuf:57
+1:7: error: expected ')' before '*' token
+/c/strawberry\c\bin\../lib/gcc/x86_64-w64-mingw32/4.6.3/include/c++/streambuf:57
+1:7: error: expected ')' before '*' token
+
+Which we can fix by removing the following include in ogr_wrap.cpp (check the line):
+
+1573c1573
+< #include <iostream>
+---
+> //#include <iostream>
+
+And also osr_wrap.cpp:
+
+1590c1590
+< #include <iostream>
+---
+> //#include <iostream>
+
+
+
+And that should do it, mine builds fine after that.
+
