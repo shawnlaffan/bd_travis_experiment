@@ -17,7 +17,7 @@ matrix:
         # - geo_gdal_dir=Geo-GDAL-1.9921
     - perl: "5.20.1"
       env:
-        - gdal_version=2.0.1
+        - gdal_version=2.1.0
         - geo_gdal_tar=Geo-GDAL-2.01004.tar.gz
         - geo_gdal_dir=Geo-GDAL-2.01004
     # - perl: "5.22"
@@ -27,7 +27,7 @@ matrix:
         # - geo_gdal_dir=Geo-GDAL-1.9921
     - perl: "5.22"
       env:
-        - gdal_version=2.0.1
+        - gdal_version=2.1.0
         - geo_gdal_tar=Geo-GDAL-2.01004.tar.gz
         - geo_gdal_dir=Geo-GDAL-2.01004
     # - perl: "5.24"
