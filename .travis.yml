@@ -18,8 +18,8 @@ matrix:
     - perl: "5.20.1"
       env:
         - gdal_version=2.1.0
-        - geo_gdal_tar=Geo-GDAL-2.01004.tar.gz
-        - geo_gdal_dir=Geo-GDAL-2.01004
+        - geo_gdal_tar=Geo-GDAL-2.010004.tar.gz
+        - geo_gdal_dir=Geo-GDAL-2.010004
     # - perl: "5.22"
       # env:
         # - gdal_version=1.11.2
@@ -28,8 +28,8 @@ matrix:
     - perl: "5.22"
       env:
         - gdal_version=2.1.0
-        - geo_gdal_tar=Geo-GDAL-2.01004.tar.gz
-        - geo_gdal_dir=Geo-GDAL-2.01004
+        - geo_gdal_tar=Geo-GDAL-2.010004.tar.gz
+        - geo_gdal_dir=Geo-GDAL-2.010004
     # - perl: "5.24"
       # env:
         # - gdal_version=2.0.11
@@ -46,6 +46,8 @@ before_install:
   - which cpanm
   - cpanm --no-interactive --notest --skip-satisfied Task::Biodiverse::NoGUI
 install:
+  - wget https://cpan.metacpan.org/authors/id/A/AJ/AJOLMA/${geo_gdal_tar}
+  - tar -xzvf ${geo_gdal_tar}
   - startdir=`pwd`
   - which perl
   - perl -v
@@ -57,8 +59,6 @@ install:
   - if [ -n $gdalconfig ]; then cd ${startdir}; fi
   - if [ -n $gdalconfig ]; then gdalconfig=`which gdal-config`; fi
   #- ls -R ~/gdal
-  - wget https://cpan.metacpan.org/authors/id/A/AJ/AJOLMA/${geo_gdal_tar}
-  - tar -xzvf ${geo_gdal_tar}
   - cd ${geo_gdal_dir} && perl Makefile.PL --no-version-check --gdal-config=$gdalconfig && make && make test && make install && make clean
   - echo 'GDAL installed'
   - pwd
