@@ -17,7 +17,7 @@ matrix:
         # - geo_gdal_dir=Geo-GDAL-1.9921
     - perl: "5.20.1"
       env:
-        - gdal_version=2.1.0
+        - gdal_version=2.1.2
         - geo_gdal_tar=Geo-GDAL-2.010004.tar.gz
         - geo_gdal_dir=Geo-GDAL-2.010004
     # - perl: "5.22"
@@ -27,7 +27,7 @@ matrix:
         # - geo_gdal_dir=Geo-GDAL-1.9921
     - perl: "5.22"
       env:
-        - gdal_version=2.1.0
+        - gdal_version=2.1.2
         - geo_gdal_tar=Geo-GDAL-2.010004.tar.gz
         - geo_gdal_dir=Geo-GDAL-2.010004
     # - perl: "5.24"
@@ -44,10 +44,11 @@ before_install:
   - mkdir -p $HOME/gdal/${gdal_version}
   - export PATH=$HOME/gdal/${gdal_version}/bin:$PATH
   - which cpanm
-  - cpanm --no-interactive --notest --skip-satisfied Task::Biodiverse::NoGUI
+  #  reinstate later
+  # - cpanm --no-interactive --notest --skip-satisfied Task::Biodiverse::NoGUI
 install:
   - wget https://cpan.metacpan.org/authors/id/A/AJ/AJOLMA/${geo_gdal_tar}
-  - tar -xzvf ${geo_gdal_tar}
+  - tar -xzf ${geo_gdal_tar}
   - startdir=`pwd`
   - which perl
   - perl -v
