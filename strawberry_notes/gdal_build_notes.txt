@@ -8,9 +8,10 @@ export LIBRARY_PATH=${ST}/perl/lib/CORE:${ST}/c/lib:${GDAL_ROOT}
 #  for -I
 export CPATH=${ST}/c/include
 
+#  clear mingw perl from path??
 
-./configure --with-curl=no
-
+#./configure --with-curl=no
+./configure
 
 #  now edit the files as per https://trac.osgeo.org/gdal/wiki/BuildingWithMinGW
 #  1.

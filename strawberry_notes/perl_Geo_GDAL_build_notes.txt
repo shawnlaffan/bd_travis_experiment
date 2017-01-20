@@ -1,4 +1,4 @@
-msys2 third atempt, using msys2 shell
+##msys2 third attempt, using msys2 shell
 
 #  download and extract latest gdal from metacpan
 
@@ -8,9 +8,9 @@ export GDAL_ROOT=/c/gdal_builds/gdal-2.1.2
 #export GDAL_ROOT=/c/gdal_builds/gdal-2.1.0
 export PATH=${ST_PERL}/c/bin:${ST_PERL}/perl/site/bin:${ST_PERL}/perl/bin:${GDAL_ROOT}:${PATH}
 #  for -L
-export LIBRARY_PATH=${ST_PERL}/perl/lib/CORE:${ST_PERL}/c/lib:${GDAL_ROOT}
+export LIBRARY_PATH=${ST_PERL}/perl/lib/CORE:${ST_PERL}/c/lib:${GDAL_ROOT}:/mingw64/bin
 #  for -I  (might need to edit gdal-config of Makefile.pl?)
-export CPATH=${ST_PERL}/c/include:${ST_PERL}/perl/lib/CORE
+export CPATH=${ST_PERL}/c/include:${ST_PERL}/perl/lib/CORE:/mingw64/include
 export CPLUS_INCLUDE_PATH=${GDAL_ROOT}:${CPATH}
 export C_INCLUDE_PATH=${CPLUS_INCLUDE_PATH}
 
@@ -27,9 +27,13 @@ export PATH=${GDAL_ROOT}/.libs:${PATH}
 
 #  get /mingw64/bin into the -L path somewhere
 #  currently doing after this next line
+#  - no - editing gdal-config to point to mingw64/bin instead of /mingw64/lib
 
 perl Makefile.PL --gdal-config=${GDAL_ROOT}/apps/gdal-config --no-version-check
 
+#  add mingw64/bin to -L - need to find a better way of doing this
+# sed -i -e '/LDDLFLAGS =/ s|$| -L"/mingw64/bin"|' Makefile_*
+# sed -i -e '/LDFLAGS =/ s|$| -L"/mingw64/bin"|' Makefile_*
 
 ##  adapted from Knittel notes
 # Make the following changes:
@@ -44,19 +48,28 @@ sed -i -e 's|/mingw/bin/x86_64-w64-mingw32-g++|g++|' Makefile_*
 # The paths were written in format: /c/strawberry\perl\bin\perl.exe etc, which turns into C:strawberryperlbinperl.exe.  The following should transform '\' into '/', excluding cases such as \" and \(end of line):
 sed -i -e 's|\\\([^\"\\]\)|/\1|g' Makefile_*
 #  and change "C:/berrybrew
-sed -i -e 's|C\:/berrybrew\|c/berrybrew|g' Makefile_*
+sed -i -e 's|C\:/berrybrew|/c/berrybrew|gi' Makefile_*
+
 
 ### attach -L"/c/gdal_builds/gdal-2.1.2" to LDFLAGS and LDDLFLAGS  - not needed given next line
 ## manually insert libgdal.dll into the c++ commands (the $(LD) lines?)
 #  could edit the OTHERLDFLAGS line to be "${GDAL_ROOT}/libgdal-20.dll"
 #sed -i -e 's|^OTHERLDFLAGS \=|OTHERLDFLAGS \= "/c/gdal_builds/gdal-2.1.2/.libs/libgdal-20.dll"|g' Makefile_*
-sed -i -e 's|^OTHERLDFLAGS \=|OTHERLDFLAGS \= '${GDAL_HOME}'/.libs/libgdal-20.dll"|g' Makefile_*
+sed -i -e 's|^OTHERLDFLAGS \=|OTHERLDFLAGS \= "'${GDAL_ROOT}'/.libs/libgdal-20.dll"|g' Makefile_*
 
 
 #  now try making it
 make
 
+#  now test it (prove in strawberry perl is a windows bat file so we need to find and run each file in turn)
+find t -name '*.t' -print | xargs -n1 perl -I./blib/lib -I./blib/arch
+
 # then test it using strawberry perl from the windows command prompt (prove is a windows .bat file)
 #  remembering to add all the relevant dirs to the path
-prove -b t\00.t
+# prove -b t\00.t
 
+
+
+###  a handy util to find where the DLLs are coming from:
+# objdump -x .libs/libgdal-20.dll | grep 'DLL Name' | gawk -vFS=' ' '{print $NF}' | xargs -n1 which
+ 
