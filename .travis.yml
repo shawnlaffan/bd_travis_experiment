@@ -52,6 +52,7 @@ install:
   #- ls -R ~/gdal
   - cd ${geo_gdal_dir} && perl Makefile.PL --no-version-check --gdal-config=$gdalconfig && make && make test && make install && make clean
   - echo 'GDAL installed'
+  - perl t/osr.t
   - pwd
   - cd ${startdir}
   - rm -r ${geo_gdal_dir}  #  avoid makefile confusion - might be handled by the make clean though
