@@ -1,5 +1,9 @@
 ##msys2 third attempt, using msys2 shell
 
+### 2017-01-30
+### Something is missing in these steps as we are hitting the missing fwrite problem on a clean run
+### need to remember which -I it is from, and where it goes
+
 #  download and extract latest gdal from metacpan
 
 
@@ -10,7 +14,7 @@ export PATH=${ST_PERL}/c/bin:${ST_PERL}/perl/site/bin:${ST_PERL}/perl/bin:${GDAL
 #  for -L
 export LIBRARY_PATH=${ST_PERL}/perl/lib/CORE:${ST_PERL}/c/lib:${GDAL_ROOT}:/mingw64/bin
 #  for -I  (might need to edit gdal-config of Makefile.pl?)
-export CPATH=${ST_PERL}/c/include:${ST_PERL}/perl/lib/CORE:/mingw64/include
+export CPATH=${ST_PERL}/c/include:${ST_PERL}/perl/lib/CORE:${ST}/c/x86_64-w64-mingw32/include/c++:/mingw64/include
 export CPLUS_INCLUDE_PATH=${GDAL_ROOT}:${CPATH}
 export C_INCLUDE_PATH=${CPLUS_INCLUDE_PATH}
 
@@ -19,7 +23,7 @@ export C_INCLUDE_PATH=${CPLUS_INCLUDE_PATH}
 export PATH=${GDAL_ROOT}/.libs:${PATH}
 
 
-# edit Makefile.PL to generate a make-style makefile
+# edit Makefile.PL to generate a make-style makefile - should add as arg to next line
 # WriteMakefile (
 #     MAKE => 'make',
 # ...
@@ -50,8 +54,10 @@ sed -i -e 's|\\\([^\"\\]\)|/\1|g' Makefile_*
 #  and change "C:/berrybrew
 sed -i -e 's|C\:/berrybrew|/c/berrybrew|gi' Makefile_*
 
+#  surely there is a setting in Makemaker for this
+sed -i -e 's|CC = gcc|CC = g++|' Makefile_*
 
-### attach -L"/c/gdal_builds/gdal-2.1.2" to LDFLAGS and LDDLFLAGS  - not needed given next line
+### attach -L"/c/gdal_builds/gdal-2.1.2" to LDFLAGS and LDDLFLAGS  - no, not needed given next line
 ## manually insert libgdal.dll into the c++ commands (the $(LD) lines?)
 #  could edit the OTHERLDFLAGS line to be "${GDAL_ROOT}/libgdal-20.dll"
 #sed -i -e 's|^OTHERLDFLAGS \=|OTHERLDFLAGS \= "/c/gdal_builds/gdal-2.1.2/.libs/libgdal-20.dll"|g' Makefile_*
@@ -61,8 +67,11 @@ sed -i -e 's|^OTHERLDFLAGS \=|OTHERLDFLAGS \= "'${GDAL_ROOT}'/.libs/libgdal-20.d
 #  now try making it
 make
 
-#  now test it (prove in strawberry perl is a windows bat file so we need to find and run each file in turn)
-find t -name '*.t' -print | xargs -n1 perl -I./blib/lib -I./blib/arch
+#  now test it (prove from strawberry perl is a windows bat file so we need to find and run each file in turn)
+#find t -name '*.t' -print | xargs -n1 perl -I./blib/lib -I./blib/arch
+#  or just use make test
+make test
+
 
 # then test it using strawberry perl from the windows command prompt (prove is a windows .bat file)
 #  remembering to add all the relevant dirs to the path
@@ -72,4 +81,4 @@ find t -name '*.t' -print | xargs -n1 perl -I./blib/lib -I./blib/arch
 
 ###  a handy util to find where the DLLs are coming from:
 # objdump -x .libs/libgdal-20.dll | grep 'DLL Name' | gawk -vFS=' ' '{print $NF}' | xargs -n1 which
- 
+#  or use Dependency Walker.   

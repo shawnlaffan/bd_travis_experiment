@@ -6,30 +6,41 @@ export PATH=${ST}/c/bin:${ST}/perl/site/bin:${ST}/perl/bin:${PATH}
 #  for -L
 export LIBRARY_PATH=${ST}/perl/lib/CORE:${ST}/c/lib:${GDAL_ROOT}
 #  for -I
-export CPATH=${ST}/c/include
+##### Make sure this is in the include path: 
+##### C:\berrybrew\5.24.0_64_PDL\c\x86_64-w64-mingw32\include\c++
+export CPATH=${ST}/c/include:${ST}/c/x86_64-w64-mingw32/include/c++
 
 #  clear mingw perl from path??
 
-#./configure --with-curl=no
-./configure
+
+./configure --with-curl=no --with-perl
+#./configure
 
 #  now edit the files as per https://trac.osgeo.org/gdal/wiki/BuildingWithMinGW
 #  1.
 #  change all $(GDAL_ROOT) in GNUmakefile to '.'
 #  otherwise some commands get too long
+#  and the system fails, saying it cannot find a .o file (that actually exists)
 #  Could just set GDAL_ROOT=.?
 
-sed -i -e 's/\$\(GDAL_ROOT\)/\./g' GNUmakefile
+#sed -i -e 's/\$\(GDAL_ROOT\)/\./g' GNUmakefile
+sed -i -e 's|\$\(GDAL_ROOT\)|\.|g' GNUmakefile
+
+
+#  should probably change this line in cpl_config.h
+# /* The size of `long', as computed by sizeof. */
+# /* #undef SIZEOF_LONG */
+#define SIZEOF_LONG 4
 
 #  2.
-#  skip expat steps for now - should point to strawberry perl's version
+#  skip expat steps for now - should already point to strawberry perl's version
 #  3.
 #  skip the gtk steps unless it is in the path
 #  4.
 #  skip the misc section for now as we seem to get the same answers as in that wiki page
 #  except SIZEOF_VOIDP, but poss that's due to x64?  Leaving at 8 for now.  
 
-make
+make -j4
 
 #  and wait a while........
 
