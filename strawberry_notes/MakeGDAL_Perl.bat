@@ -22,6 +22,7 @@ perl Makefile.PL MAKE=gmake --gdal-config=%GDAL_ROOT%/apps/gdal-config --no-vers
 :: sed -i -e 's/NOOP = rem/NOOP =/' Makefile_*
 :: sed -i -e 's|DIRFILESEP = \\|DIRFILESEP = /|' Makefile_*
 
+rem YOU NEED TO EDIT make.bat to use gmake instead of dmake
 call make
 call make test
 :: call make install
