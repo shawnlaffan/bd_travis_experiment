@@ -1,4 +1,4 @@
-= Building gdal and Geo::GDAL using Srawberry Perl =
+= Building gdal and Geo::GDAL using Strawberry Perl =
 
 These have been tested using Strawberry Perl 5.24.0 and the mingw64 shell (installed as part of msys2).
 
