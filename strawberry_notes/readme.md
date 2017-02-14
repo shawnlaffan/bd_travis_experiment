@@ -1,7 +1,9 @@
 ## Building gdal and Geo::GDAL using Strawberry Perl
 
-These have been tested using Strawberry Perl 5.24.0, gdal 2.1.2 and Geo::GDAL 2.010301.
+These have been tested using Strawberry Perl 5.24.0 (with PDL), gdal 2.1.2 and Geo::GDAL 2.010301.
 You will also need the mingw64 shell (installed as part of msys2).
+
+It appears that the PDL version of Strawberry perl is needed, as it provides HDF, NetCDF and other libraries that are not in the "vanilla" Strawberry releases.  
 
 1.  Download and extract the source code for GDAL (or get it using svn).
 1.  Download and extract the Geo::GDAL package from cpan.  Look for the download link at the left of https://metacpan.org/pod/Geo::GDAL

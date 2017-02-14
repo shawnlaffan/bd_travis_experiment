@@ -2,6 +2,8 @@ rem Make Geo::GDAL Perl Binding
 rem  steps courtesy Anderson Ku
 rem Update base paths to match your system
 
+
+:: Probably need the PDL version so we get the HDF and NetCDF etc libs.
 set PERL_ROOT=C:\berrybrew\5.24.0_64_PDL
 set GDAL_ROOT=C:\gdal_builds\gdal-2.1.2
 set MSYS_ROOT=C:\msys64
