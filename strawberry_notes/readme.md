@@ -1,6 +1,8 @@
 # Building gdal and Geo::GDAL using Strawberry Perl
 
-There are two sets of instructions, one for Perl [version 5.24]((Using_Perl_version_524)), and one for [Perl 5.26](Using_Perl_version_526).  These are very similar, and should be combined at some point, as should the scripts.  
+There are two sets of instructions, one for Perl [version 5.24](#Using-Perl-version-524), and one for [version 5.26](#Using-Perl-version-526).  These are very similar, and should be combined at some point, as should the scripts.  
+
+It appears that the PDL version of Strawberry perl is needed, as it provides HDF, NetCDF and other libraries that are not in the "vanilla" Strawberry releases.  
 
 
 ##  Using Perl version 5.24
@@ -8,7 +10,6 @@ There are two sets of instructions, one for Perl [version 5.24]((Using_Perl_vers
 These have been tested using Strawberry Perl 5.24.0 (with PDL), gdal 2.1.2 and Geo::GDAL 2.010301.
 You will also need the mingw64 shell (installed as part of msys2).
 
-It appears that the PDL version of Strawberry perl is needed, as it provides HDF, NetCDF and other libraries that are not in the "vanilla" Strawberry releases.  
 
 1.  Download and extract the source code for GDAL (or get it using svn).
 1.  Download and extract the Geo::GDAL package from cpan.  Look for the download link at the left of https://metacpan.org/pod/Geo::GDAL
@@ -27,7 +28,6 @@ ERROR 1: GeoJSON parsing error: unexpected character (at offset 0)```.  This is 
 These have been tested using Strawberry Perl 5.26.0 (with PDL), gdal 2.1.2 and Geo::GDAL 2.010301.
 You will also need the mingw64 shell (installed as part of msys2).
 
-It appears that the PDL version of Strawberry perl is needed, as it provides HDF, NetCDF and other libraries that are not in the "vanilla" Strawberry releases.  
 
 1.  Patch perl/lib/CORE/perl.h in 5.26.0 as per https://rt.cpan.org/Public/Bug/Display.html?id=121683
   1. It seems to work, but there are no guarantees...
