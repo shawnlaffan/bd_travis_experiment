@@ -36,6 +36,7 @@ You will also need the mingw64 shell (installed as part of msys2).
   * Download and extract the source code for GDAL (or get it using svn).
   * Download and extract the Geo::GDAL package from cpan.  Look for the download link at the left of https://metacpan.org/pod/Geo::GDAL
   * Edit ```build_gdal_perl526.sh``` so the environment variables point to where you extracted gdal and to where you have Strawberry Perl.
+  * You might need to apply the patch in file ```p526_isnan.patch``` to ```port/cpl_port.h```.  This has worked once, but there are no guarantees it will work again. 
   * In the mingw64 shell, run ```build_gdal_perl526.sh```
     * If you want to install gdal then run ```make install``` as well.
   * In a windows command prompt, run ```Make_perl526_Geo_GDAL.bat```

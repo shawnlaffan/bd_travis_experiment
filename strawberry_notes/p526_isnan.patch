@@ -1,0 +1,11 @@
+--- port/cpl_port_old.h 2017-09-20 11:16:09.853505300 +1000
++++ port/cpl_port.h     2017-09-21 14:05:59.450702200 +1000
+@@ -648,7 +648,7 @@
+ /*      function but no corresponding macro, but I can live with        */
+ /*      that since it isn't that important a test.                      */
+ /* -------------------------------------------------------------------- */
+-#ifdef _MSC_VER
++#if defined(WIN64) || defined(_MSC_VER)
+ #  include <float.h>
+ #  define CPLIsNan(x) _isnan(x)
+ #  define CPLIsInf(x) (!_isnan(x) && !_finite(x))
